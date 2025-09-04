@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Transformation Diary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #9aa5b1;
+            --accent: #6ee7b7;
+            --accent2: #60a5fa;
+            --glass: rgba(255, 255, 255, 0.04);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(180deg, #071021 0%, #071b2b 60%);
+            color: #e6eef6;
+            line-height: 1.6;
+            padding-bottom: 20px;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--glass);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sub {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+            margin-bottom: 16px;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .nav-tab {
+            padding: 12px 16px;
+            background: var(--glass);
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            color: #04233a;
+            font-weight: 600;
+        }
+
+        /* Day selector */
+        .day-scroller {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-bottom: 16px;
+        }
+
+        .day-btn {
+            padding: 10px;
+            min-width: 60px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px dashed rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .day-btn.active {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .day-btn .number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .day-btn .label {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* Progress */
+        .progress {
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress > i {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Tasks */
+        .tasks {
+            margin-top: 16px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 8px;
+        }
+
+        .task input[type=checkbox] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent);
+        }
+
+        .task .label {
+            flex: 1;
+            font-size: 15px;
+        }
+
+        .task.completed .label {
+            text-decoration: line-through;
+            color: var(--muted);
+        }
+
+        /* Journal */
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: inherit;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            color: #04233a;
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: #e6eef6;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 4px 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Instructions */
+        .instructions {
+            background: var(--glass);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .app {
+                max-width: 800px;
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>My Transformation Diary</h1>
+            <div class="sub">Track your daily progress toward your goals</div>
+            <div class="sub">Auto-saves to your browser</div>
+        </header>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="tracker">Daily Tracker</div>
+            <div class="nav-tab" data-tab="progress">Progress</div>
+            <div class="nav-tab" data-tab="instructions">Add to Home Screen</div>
+        </div>
+
+        <!-- Daily Tracker Tab -->
+        <div class="tab-content" id="tracker-tab">
+            <div class="panel">
+                <div class="sub">Day <span id="dayNumber">1</span> • Week <span id="weekNumber">1</span></div>
+                <h2 id="dayTitle">Daily Checklist</h2>
+                <div class="sub" id="selectedDate">Monday, January 1</div>
+                
+                <div class="day-scroller" id="dayButtons"></div>
+                
+                <div class="sub">Progress</div>
+                <div class="progress"><i id="progressBar"></i></div>
+                <div style="display:flex;justify-content:space-between;margin-top:6px">
+                    <span id="checkedCount">0</span>/<span id="totalCount">0</span> done 
+                    <span id="percent">0%</span>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Today's Tasks</h3>
+                <div class="tasks" id="tasks"></div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="selectAllBtn">
+                        <i class="fas fa-check-square"></i> Select All
+                    </button>
+                    <button class="btn btn-secondary" id="clearAllBtn">
+                        <i class="fas fa-times-circle"></i> Clear All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Daily Journal</h3>
+                <div class="sub">Reflect on your day, note achievements, challenges, or ideas</div>
+                <textarea id="journalText" placeholder="How did your day go? What progress did you make? How are you feeling?"></textarea>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="saveJournalBtn">
+                        <i class="fas fa-save"></i> Save Journal
+                    </button>
+                    <button class="btn btn-secondary" id="clearDayBtn">
+                        <i class="fas fa-trash-alt"></i> Reset Day
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Tab -->
+        <div class="tab-content" id="progress-tab" style="display:none">
+            <div class="panel">
+                <h3>Your Progress</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="daysCompleted">0</div>
+                        <div class="stat-label">Days Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completionRate">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTasks">0</div>
+                        <div class="stat-label">Tasks Completed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Weekly Checkpoints</h3>
+                <div id="checkpoints"></div>
+            </div>
+            
+            <div class="panel">
+                <h3>Export Data</h3>
+                <p class="sub">Download your data for backup or analysis</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="exportJsonBtn">
+                        <i class="fas fa-file-export"></i> Export as JSON
+                    </button>
+                    <button class="btn btn-primary" id="printBtn">
+                        <i class="fas fa-print"></i> Print Summary
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions Tab -->
+        <div class="tab-content" id="instructions-tab" style="display:none">
+            <div class="panel">
+                <h3>How to Add to Home Screen</h3>
+                <p class="sub">Follow these steps to add this app to your phone's home screen for easy access</p>
+                
+                <div class="instructions">
+                    <h4>For iPhone (Safari):</h4>
+                    <ol>
+                        <li>Tap the <i class="fas fa-share"></i> Share button at the bottom</li>
+                        <li>Scroll down and tap "Add to Home Screen"</li>
+                        <li>Edit the name if desired, then tap "Add"</li>
+                        <li>The app will now be available on your home screen</li>
+                    </ol>
+                    
+                    <h4>For Android (Chrome):</h4>
+                    <ol>
+                        <li>Tap the <i class="fas fa-ellipsis-vertical"></i> menu button in the top right</li>
+                        <li>Tap "Add to Home Screen"</li>
+                        <li>Edit the name if desired, then tap "Add"</li>
+                        <li>The app will now be available on your home screen</li>
+                    </ol>
+                    
+                    <p><strong>Note:</strong> This will work best if you visit this page regularly as your browser may clear the stored data if not used for a long time.</p>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>About This App</h3>
+                <p class="sub">Your personal transformation tracker</p>
+                <p>This app stores all your data locally in your browser. No data is sent to any server.</p>
+                <p>For best results, use the app daily and export your data periodically as a backup.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Default task templates
+    const DEFAULT_TASK_TEMPLATES = [
+        {id:'skin_am', label:'Skin AM: Cleanser + Moisturizer + Sunscreen'},
+        {id:'skin_pm', label:'Skin PM: Cleanser + Moisturizer + Treatment'},
+        {id:'workout', label:'Workout: Strength or Cardio (30-50 min)'},
+        {id:'steps', label:'Walk: 7,000 - 10,000 steps'},
+        {id:'water', label:'Hydration: Drink 3 - 4 L water'},
+        {id:'sleep', label:'Sleep: 7 - 8 hrs (phone off 30 min before bed)'},
+        {id:'meditate', label:'Mindset: Meditation (5 - 10 min)'},
+        {id:'learning', label:'Skill practice: 30 - 60 min'},
+    ];
+
+    // Configuration
+    const CONFIG = {
+        duration: 90,
+        startDate: new Date(),
+        tasks: DEFAULT_TASK_TEMPLATES
+    };
+
+    // Storage keys
+    const STORAGE_KEY = 'my_transformation_diary';
+
+    // Initialize
+    function initApp() {
+        loadStorage();
+        setupEventListeners();
+        renderDayButtons();
+        selectToday();
+        updateStats();
+    }
+
+    // Load data storage
+    function loadStorage() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+            window.store = { days: {} };
+            return;
+        }
+        
+        try {
+            window.store = JSON.parse(raw);
+            if (!store.days) store.days = {};
+        } catch (e) {
+            console.error('Error parsing storage', e);
+            window.store = { days: {} };
+        }
+    }
+
+    // Save data to storage
+    function saveStore() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+        updateStats();
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+        // Tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+                
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).style.display = 'block';
+            });
+        });
+        
+        // Journal save
+        document.getElementById('saveJournalBtn').addEventListener('click', saveJournal);
+        
+        // Clear day
+        document.getElementById('clearDayBtn').addEventListener('click', clearDay);
+        
+        // Select all tasks
+        document.getElementById('selectAllBtn').addEventListener('click', () => {
+            const dayObj = ensureDayObj(selectedDay);
+            CONFIG.tasks.forEach(task => {
+                dayObj.tasks[task.id] = true;
+            });
+            saveStore();
+            renderTasks();
+        });
+        
+        // Clear all tasks
+        document.getElementById('clearAllBtn').addEventListener('click', () => {
+            const dayObj = ensureDayObj(selectedDay);
+            CONFIG.tasks.forEach(task => {
+                dayObj.tasks[task.id] = false;
+            });
+            saveStore();
+            renderTasks();
+        });
+        
+        // Export buttons
+        document.getElementById('exportJsonBtn').addEventListener('click', exportData);
+        document.getElementById('printBtn').addEventListener('click', printSummary);
+    }
+
+    // Utility functions
+    function dayToDate(dayIndex) {
+        const d = new Date(CONFIG.startDate);
+        d.setDate(d.getDate() + (dayIndex - 1));
+        return d;
+    }
+
+    function formatDateISO(d) {
+        return d.toISOString().slice(0, 10);
+    }
+
+    function formatPretty(d) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return d.toLocaleDateString(undefined, options);
+    }
+
+    function getDayName(d) {
+        return d.toLocaleDateString(undefined, { weekday: 'short' });
+    }
+
+    // Selected day management
+    let selectedDay = 1;
+
+    function ensureDayObj(dayIndex) {
+        const iso = formatDateISO(dayToDate(dayIndex));
+        if (!store.days[iso]) {
+            store.days[iso] = {
+                tasks: {},
+                journal: '',
+                completed: false
+            };
+            
+            // Initialize all tasks as not completed
+            CONFIG.tasks.forEach(task => {
+                store.days[iso].tasks[task.id] = false;
+            });
+        }
+        return store.days[iso];
+    }
+
+    // Render day buttons
+    function renderDayButtons() {
+        const container = document.getElementById('dayButtons');
+        container.innerHTML = '';
+        
+        for (let d = 1; d <= CONFIG.duration; d++) {
+            const date = dayToDate(d);
+            const dayName = getDayName(date);
+            
+            const btn = document.createElement('button');
+            btn.className = 'day-btn';
+            btn.innerHTML = `
+                <span class="number">${d}</span>
+                <span class="label">${dayName}</span>
+            `;
+            btn.dataset.day = d;
+            btn.addEventListener('click', () => selectDay(d));
+            
+            // Mark completed days
+            const iso = formatDateISO(date);
+            if (store.days[iso] && store.days[iso].completed) {
+                btn.style.borderColor = 'var(--success)';
+            }
+            
+            container.appendChild(btn);
+        }
+    }
+
+    // Select a day
+    function selectDay(dayIndex) {
+        selectedDay = dayIndex;
+        
+        // Update UI
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.day) === dayIndex);
+        });
+        
+        const date = dayToDate(dayIndex);
+        document.getElementById('dayNumber').textContent = dayIndex;
+        document.getElementById('weekNumber').textContent = Math.ceil(dayIndex / 7);
+        document.getElementById('selectedDate').textContent = formatPretty(date);
+        
+        renderTasks();
+    }
+
+    // Select today
+    function selectToday() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const start = new Date(CONFIG.startDate);
+        start.setHours(0, 0, 0, 0);
+        
+        const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+        const dayIndex = Math.min(Math.max(1, diff + 1), CONFIG.duration);
+        
+        selectDay(dayIndex);
+    }
+
+    // Render tasks
+    function renderTasks() {
+        const container = document.getElementById('tasks');
+        container.innerHTML = '';
+        
+        const dayObj = ensureDayObj(selectedDay);
+        
+        CONFIG.tasks.forEach(task => {
+            const taskEl = document.createElement('div');
+            taskEl.className = `task ${dayObj.tasks[task.id] ? 'completed' : ''}`;
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = dayObj.tasks[task.id];
+            checkbox.id = `task-${task.id}`;
+            checkbox.addEventListener('change', () => {
+                dayObj.tasks[task.id] = checkbox.checked;
+                
+                // Check if all tasks are completed
+                const allCompleted = CONFIG.tasks.every(t => dayObj.tasks[t.id]);
+                dayObj.completed = allCompleted;
+                
+                saveStore();
+                renderTasks();
+                renderDayButtons(); // Update day buttons to reflect completion
+            });
+            
+            const label = document.createElement('label');
+            label.htmlFor = `task-${task.id}`;
+            label.className = 'label';
+            label.textContent = task.label;
+            
+            taskEl.appendChild(checkbox);
+            taskEl.appendChild(label);
+            container.appendChild(taskEl);
+        });
+        
+        // Update progress
+        updateProgress(dayObj);
+        
+        // Load journal
+        document.getElementById('journalText').value = dayObj.journal || '';
+    }
+
+    // Update progress bar
+    function updateProgress(dayObj) {
+        const total = CONFIG.tasks.length;
+        const completed = Object.values(dayObj.tasks).filter(v => v).length;
+        const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+        
+        document.getElementById('checkedCount').textContent = completed;
+        document.getElementById('totalCount').textContent = total;
+        document.getElementById('percent').textContent = `${percent}%`;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    // Save journal
+    function saveJournal() {
+        const dayObj = ensureDayObj(selectedDay);
+        dayObj.journal = document.getElementById('journalText').value;
+        saveStore();
+        
+        // Show confirmation
+        const btn = document.getElementById('saveJournalBtn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Saved!';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 2000);
+    }
+
+    // Clear day
+    function clearDay() {
+        if (!confirm('Clear all tasks and journal for this day?')) return;
+        
+        const iso = formatDateISO(dayToDate(selectedDay));
+        store.days[iso] = {
+            tasks: {},
+            journal: '',
+            completed: false
+        };
+        
+        CONFIG.tasks.forEach(task => {
+            store.days[iso].tasks[task.id] = false;
+        });
+        
+        saveStore();
+        renderTasks();
+    }
+
+    // Update statistics
+    function updateStats() {
+        const days = Object.keys(store.days).length;
+        const completedDays = Object.values(store.days).filter(day => day.completed).length;
+        const completionRate = days > 0 ? Math.round((completedDays / days) * 100) : 0;
+        
+        // Calculate streak
+        let streak = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        for (let i = 0; i < CONFIG.duration; i++) {
+            const date = new Date(today);
+            date.setDate(date.getDate() - i);
+            const iso = formatDateISO(date);
+            
+            if (store.days[iso] && store.days[iso].completed) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+        
+        // Calculate total tasks completed
+        let totalTasks = 0;
+        Object.values(store.days).forEach(day => {
+            totalTasks += Object.values(day.tasks).filter(v => v).length;
+        });
+        
+        document.getElementById('daysCompleted').textContent = completedDays;
+        document.getElementById('completionRate').textContent = `${completionRate}%`;
+        document.getElementById('currentStreak').textContent = streak;
+        document.getElementById('totalTasks').textContent = totalTasks;
+        
+        renderCheckpoints();
+    }
+
+    // Render checkpoints
+    function renderCheckpoints() {
+        const container = document.getElementById('checkpoints');
+        container.innerHTML = '';
+        
+        for (let week = 1; week <= Math.ceil(CONFIG.duration / 7); week++) {
+            const weekStartDay = (week - 1) * 7 + 1;
+            const weekEndDay = Math.min(week * 7, CONFIG.duration);
+            
+            const weekEl = document.createElement('div');
+            weekEl.style.marginBottom = '20px';
+            
+            const header = document.createElement('h4');
+            header.textContent = `Week ${week} (Day ${weekStartDay}-${weekEndDay})`;
+            header.style.marginBottom = '8px';
+            
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress';
+            progressBar.style.marginBottom = '8px';
+            
+            const progressFill = document.createElement('i');
+            progressBar.appendChild(progressFill);
+            
+            // Calculate week completion
+            let weekCompleted = 0;
+            for (let d = weekStartDay; d <= weekEndDay; d++) {
+                const iso = formatDateISO(dayToDate(d));
+                if (store.days[iso] && store.days[iso].completed) {
+                    weekCompleted++;
+                }
+            }
+            
+            const weekPercent = Math.round((weekCompleted / (weekEndDay - weekStartDay + 1)) * 100);
+            progressFill.style.width = `${weekPercent}%`;
+            
+            const stats = document.createElement('div');
+            stats.className = 'sub';
+            stats.textContent = `${weekCompleted}/${weekEndDay - weekStartDay + 1} days completed (${weekPercent}%)`;
+            
+            weekEl.appendChild(header);
+            weekEl.appendChild(progressBar);
+            weekEl.appendChild(stats);
+            
+            container.appendChild(weekEl);
+        }
+    }
+
+    // Export data
+    function exportData() {
+        const data = {
+            config: CONFIG,
+            data: store
+        };
+        
+        const exportContent = JSON.stringify(data, null, 2);
+        const blob = new Blob([exportContent], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'transformation_diary_export.json';
+        a.click();
+        
+        URL.revokeObjectURL(url);
+    }
+
+    // Print summary
+    function printSummary() {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Transformation Diary Summary</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { color: #333; }
+                        .summary-section { margin-bottom: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Transformation Diary Summary</h1>
+                    <div class="summary-section">
+                        <h2>Progress Overview</h2>
+                        <p>Days Completed: ${document.getElementById('daysCompleted').textContent}</p>
+                        <p>Completion Rate: ${document.getElementById('completionRate').textContent}</p>
+                        <p>Current Streak: ${document.getElementById('currentStreak').textContent} days</p>
+                        <p>Total Tasks Completed: ${document.getElementById('totalTasks').textContent}</p>
+                    </div>
+                    <div class="summary-section">
+                        <h2>Weekly Progress</h2>
+                        ${document.getElementById('checkpoints').innerHTML}
+                    </div>
+                </body>
+            </html>
+        `);
+        
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 250);
+    }
+
+    // Initialize the app
+    window.store = { days: {} };
+    window.addEventListener('load', initApp);
+    window.addEventListener('beforeunload', () => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    });
+    </script>
+</body>
+</html>
