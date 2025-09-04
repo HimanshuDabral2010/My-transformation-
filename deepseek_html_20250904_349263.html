@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Transformation Diary</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>My Transformation Diary</h1>
+            <div class="sub">Track your daily progress toward your goals</div>
+            <div class="sub">Auto-saves to your browser</div>
+        </header>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="tracker">Daily Tracker</div>
+            <div class="nav-tab" data-tab="progress">Progress</div>
+            <div class="nav-tab" data-tab="instructions">Add to Home Screen</div>
+        </div>
+
+        <!-- Daily Tracker Tab -->
+        <div class="tab-content" id="tracker-tab">
+            <div class="panel">
+                <div class="sub">Day <span id="dayNumber">1</span> • Week <span id="weekNumber">1</span></div>
+                <h2 id="dayTitle">Daily Checklist</h2>
+                <div class="sub" id="selectedDate">Monday, January 1</div>
+                
+                <div class="day-scroller" id="dayButtons"></div>
+                
+                <div class="sub">Progress</div>
+                <div class="progress"><i id="progressBar"></i></div>
+                <div style="display:flex;justify-content:space-between;margin-top:6px">
+                    <span id="checkedCount">0</span>/<span id="totalCount">0</span> done 
+                    <span id="percent">0%</span>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Today's Tasks</h3>
+                <div class="tasks" id="tasks"></div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="selectAllBtn">
+                        <i class="fas fa-check-square"></i> Select All
+                    </button>
+                    <button class="btn btn-secondary" id="clearAllBtn">
+                        <i class="fas fa-times-circle"></i> Clear All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Daily Journal</h3>
+                <div class="sub">Reflect on your day, note achievements, challenges, or ideas</div>
+                <textarea id="journalText" placeholder="How did your day go? What progress did you make? How are you feeling?"></textarea>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="saveJournalBtn">
+                        <i class="fas fa-save"></i> Save Journal
+                    </button>
+                    <button class="btn btn-secondary" id="clearDayBtn">
+                        <i class="fas fa-trash-alt"></i> Reset Day
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Tab -->
+        <div class="tab-content" id="progress-tab" style="display:none">
+            <div class="panel">
+                <h3>Your Progress</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="daysCompleted">0</div>
+                        <div class="stat-label">Days Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completionRate">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTasks">0</div>
+                        <div class="stat-label">Tasks Completed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>Weekly Checkpoints</h3>
+                <div id="checkpoints"></div>
+            </div>
+            
+            <div class="panel">
+                <h3>Export Data</h3>
+                <p class="sub">Download your data for backup or analysis</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="exportJsonBtn">
+                        <i class="fas fa-file-export"></i> Export as JSON
+                    </button>
+                    <button class="btn btn-primary" id="printBtn">
+                        <i class="fas fa-print"></i> Print Summary
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions Tab -->
+        <div class="tab-content" id="instructions-tab" style="display:none">
+            <div class="panel">
+                <h3>How to Add to Home Screen</h3>
+                <p class="sub">Follow these steps to add this app to your phone's home screen for easy access</p>
+                
+                <div class="instructions">
+                    <h4>For iPhone (Safari):</h4>
+                    <ol>
+                        <li>Tap the <i class="fas fa-share"></i> Share button at the bottom</li>
+                        <li>Scroll down and tap "Add to Home Screen"</li>
+                        <li>Edit the name if desired, then tap "Add"</li>
+                        <li>The app will now be available on your home screen</li>
+                    </ol>
+                    
+                    <h4>For Android (Chrome):</h4>
+                    <ol>
+                        <li>Tap the <i class="fas fa-ellipsis-vertical"></i> menu button in the top right</li>
+                        <li>Tap "Add to Home Screen"</li>
+                        <li>Edit the name if desired, then tap "Add"</li>
+                        <li>The app will now be available on your home screen</li>
+                    </ol>
+                    
+                    <p><strong>Note:</strong> This will work best if you visit this page regularly as your browser may clear the stored data if not used for a long time.</p>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>About This App</h3>
+                <p class="sub">Your personal transformation tracker</p>
+                <p>This app stores all your data locally in your browser. No data is sent to any server.</p>
+                <p>For best results, use the app daily and export your data periodically as a backup.</p>
+            </div>
+
+            <div class="panel">
+                <h3>GitHub Pages Setup</h3>
+                <p class="sub">To publish this on GitHub Pages:</p>
+                <ol>
+                    <li>Create a new repository on GitHub</li>
+                    <li>Upload these files to the repository</li>
+                    <li>Go to Settings → Pages</li>
+                    <li>Select "main" branch as source</li>
+                    <li>Your app will be available at https://username.github.io/repository-name</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
